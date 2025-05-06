@@ -38,10 +38,16 @@
         </div>
       </div>
 
-      <div class="mt-4 d-flex justify-content-center gap-3">
-        <a href="/login" class="btn btn-link btn-sm">Login</a>
-        <a href="/signup" class="btn btn-link btn-sm">Sign Up</a>
-      </div>
+        <?php if(isset($_SESSION["user"])) : ?>
+            <div class="mt-4 text-center">
+                <a href="/logout" class="btn btn-link btn-sm">Log Out</a>
+            </div>
+        <?php else : ?>
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <a href="/login" class="btn btn-link btn-sm">Login</a>
+                <a href="/signup" class="btn btn-link btn-sm">Sign Up</a>
+            </div>
+        <?php endif ; ?>
     </div>
 
 <?php require "parts/footer.php"; ?>
