@@ -1,6 +1,7 @@
 <?php require "parts/header.php"; ?>
     <div class="container mx-auto my-5" style="max-width: 800px;">
       <h1 class="h1 mb-4 text-center">Dashboard</h1>
+      <?php require "parts/message_success.php"; ?>
       <div class="row">
         <div class="col">
           <div class="card mb-2">
@@ -19,6 +20,8 @@
             </div>
           </div>
         </div>
+        <!-- only show this to admin -->
+        <?php if (isAdmin()) : ?>
         <div class="col">
           <div class="card mb-2">
             <div class="card-body">
@@ -36,6 +39,7 @@
             </div>
           </div>
         </div>
+        <?php endif; ?>
       </div>
       <div class="mt-4 text-center">
         <a href="/home" class="btn btn-link btn-sm"

@@ -10,28 +10,24 @@
 
     // 4. check for error
     if (empty($name) || empty($email) || empty($password) || empty($confirm_password)){
-        echo "All the fields are required";
+        $_SESSION["error"] = "All fields are required";
+        // redirect back to signup page
+        header("Location: /signup");
+        exit;
     } else if ($password !== $confirm_password){
-        echo "Your password does not match";
+        $_SESSION["error"] = "Your password is not match";
+        // redirect back to signup page
+        header("Location: /signup");
     } else {
         // check and make sure the email provided  is not already exists in the users table
         // get user data by email
-
-        // 5. get the user data by email
-        // 5.1 SQL command
-        $sql = "SELECT * FROM users WHERE email = :email";
-        // 5.2 prepare
-        $query = $database->prepare($sql);
-        // 5.3 execute
-        $query->execute([
-            "email" => $email
-        ]);
-        // 5.4 fetch
-        $user = $query->fetch(); // return the first row of the list
+        $user = getUserByEmail($email);
 
         // check is the user exists
         if ($user){
-            echo "The email provided already exists in our system";
+            $_SESSION["error"] = "The email provided already exists in our system";
+            // redirect back to login page
+            header("Location: /signup");
         } else {
             // 6. create a user account
             // 6.1 SQL command
@@ -44,9 +40,13 @@
                 "email" => $email,
                 "password" => password_hash($password, PASSWORD_DEFAULT)
             ]);
-            // 7. redirect to /login
+
+            // 7. set success message
+            $_SESSION["success"] = "Account created successfully. Please login with your email and password";
+
+            // 8. redirect to /login
             header("Location: /login");
             exit;
-            }
+        }
     }
 ?>

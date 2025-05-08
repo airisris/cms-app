@@ -25,6 +25,9 @@
     // figure out what path the user is visiting
     $path = $_SERVER["REQUEST_URI"];
 
+    //remove all the query string from the url
+    $path = parse_url($path, PHP_URL_PATH);
+
     // once you figure outh the path, then we need to load relevant content based on the path
     switch ($path){
         case '/login':
@@ -69,6 +72,34 @@
             break;
         case '/auth/signup':
             require "includes/auth/do_signup.php";
+            break;
+        // setup the action route for add user
+        case '/user/add' :
+            require "includes/user/add.php";
+            break;
+        // setup the action route for delete user
+        case '/user/delete' :
+            require "includes/user/delete.php";
+            break;
+        // setup the action route for change password
+        case '/user/changepwd' :
+            require "includes/user/changepwd.php";
+            break;
+        // setup the action route for edit user
+        case '/user/edit' :
+            require "includes/user/edit.php";
+            break;
+        // setup the action route for add post
+        case '/post/add' :
+            require "includes/post/add.php";
+            break;
+        // setup the action route for delete post
+        case '/post/delete' :
+            require "includes/post/delete.php";
+            break;
+        // setup the action route for edit post
+        case '/post/edit' :
+            require "includes/post/edit.php";
             break;
 
         default:
