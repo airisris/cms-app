@@ -2,15 +2,40 @@
   // check if the user is not an admin
   // 1. connect to database
   $database = connectToDB();
+  $user_id = $_SESSION["user"]["id"];
   // 2. get all the users
-    // 2.1
-  $sql = "SELECT * FROM posts";
-  // 2.2
-  $query = $database->query( $sql );
-  // 2.3
-  $query->execute();
-  // 2.4
+  // 2.1
+  /*
+    use ORDER BY to sort by column
+    use ASC to sort by ascending order (lowest value first)
+    use DESC to sort by descending order (highest value first)
+  */
+  if (isEditor()){
+    $sql = "SELECT 
+              posts.*, users.name 
+              FROM posts 
+              JOIN users 
+              ON posts.user_id = users.id 
+              ORDER BY posts.id DESC";
+    $query = $database->query( $sql );
+    $query->execute();
+  } else {
+    $sql = "SELECT 
+              posts.*, users.name 
+              FROM posts 
+              JOIN users 
+              ON posts.user_id = users.id 
+              WHERE posts.user_id = :user_id 
+              ORDER BY posts.id DESC";
+    $query = $database->prepare( $sql );
+    $query->execute([
+      "user_id" => $user_id
+    ]);
+  }
+
+
   $posts = $query->fetchAll();
+
 ?>
 <?php require "parts/header.php"; ?>
     <div class="container mx-auto my-5" style="max-width: 700px;">
@@ -29,16 +54,18 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col" style="width: 40%;">Title</th>
+              <th scope="col">Author</th>
               <th scope="col">Status</th>
               <th scope="col" class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
           <?php foreach ($posts as $index => $post) { ?>
-            <?php if ($post["user_id"] === $_SESSION["user"]["id"] || isEditor()) : ?>
+            <!-- <?php if ($post["user_id"] === $_SESSION["user"]["id"] || isEditor()) : ?> -->
             <tr>
               <th scope="row"><?php echo $post["id"]; ?></th>
               <td><?php echo $post["title"]; ?></td>
+              <td><?php echo $post["name"]; ?></td>
               <td>
                 <?php if ($post["status"] == "pending") { ?>
                   <span class="badge bg-warning">
@@ -52,7 +79,7 @@
                   <a
                     href="/post?id=<?= $post['id']; ?>"
                     target="_blank"
-                    class="btn btn-primary btn-sm me-2"
+                    class="btn btn-primary btn-sm me-2 <?php echo ($post["status"] === 'pending' ? "disabled" : ""); ?>"
                     ><i class="bi bi-eye"></i
                   ></a>
                   <a
@@ -94,7 +121,7 @@
                 </div>
               </td>
             </tr>
-            <?php endif; ?>
+            <!-- <?php endif; ?> -->
           <?php } ?>
           </tbody>
 

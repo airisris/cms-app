@@ -5,7 +5,7 @@
       </div>
       <div class="card mb-2 p-4">
       <?php require "parts/message_error.php"; ?>
-        <form method="POST" action="/post/add">
+        <form method="POST" action="/post/add" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="post-title" class="form-label">Title</label>
             <input type="text" class="form-control" id="post-title" name="title"/>
@@ -18,6 +18,9 @@
               rows="10"
               name="content"
             ></textarea>
+          </div>
+          <div class="mb-3">
+            <input type="file" name="image" accept="image/*">
           </div>
           <div class="text-end">
             <button type="submit" class="btn btn-primary">Add</button>
